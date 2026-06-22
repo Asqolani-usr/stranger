@@ -4,81 +4,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <title>Untuk Kak Safira</title>
+  <!-- Google Fonts: Outfit (headings) & Poppins (body) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <title>to my crush @wanhass_</title>
   <link rel="icon" href="https://i.ibb.co.com/hXZsYxZ/heart.png">
 </head>
 
 <body>
-  <div class="background-decor">
-    <img src="bunga.png" class="flower" style="left: 10%; animation-delay: 0s; width: 40px;">
-    <img src="bunga.png" class="flower" style="left: 70%; animation-delay: 3s; width: 50px;">
-    <img src="kupu.png" class="butterfly" style="left: 30%; top: 80%; width: 60px; animation-delay: 1s;">
-    <img src="kupu.png" class="butterfly" style="left: 80%; top: 90%; width: 40px; animation-delay: 5s;">
+  <!-- Canvas for magical mouse heart-trail -->
+  <canvas id="trailCanvas"></canvas>
+
+  <!-- Interactive Background Floating Decors -->
+  <div class="background-decor" id="bgDecor">
+    <!-- Will be populated dynamically by JS for more variation -->
   </div>
 
-  <div class="container">
-    <!-- Popup page -->
-    <div id="popup" class="active">
-      <h2 id="popupText">Sorry if it sounds cheesy, I just can’t help it when it’s someone who makes my heart race @wanhass. <3</h2>
-      <button onclick="nextPopup()">tap!</button>
+  <!-- Floating Music Controller -->
+  <div class="music-controller">
+    <button id="musicBtn" class="music-btn" onclick="toggleMusic()" aria-label="Toggle Music">
+      <span class="disc">💿</span>
+    </button>
+    <div class="visualizer" id="visualizer">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
     </div>
+  </div>
 
-    <!-- Question page -->
-    <div id="questionPage">
-      <h2><b>wanna see the prettiest girl who stole my heart<br>just with her eyes?</b></h2>
-      <div>
-        <button onclick="goToGallery()">mAau</button>
-        <button id="noBtn" onclick="moveNoBtn()">tidaa</button>
+  <audio id="audio" loop>
+    <source src="lagu.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <div class="container">
+
+    <!-- STAGE 1: Interactive Envelope -->
+    <div id="envelopeWrapper" class="active">
+      <div class="envelope" onclick="openEnvelope()">
+        <div class="flap"></div>
+        <div class="pocket"></div>
+        <div class="letter">
+          <div class="letter-preview">
+            <h3>Hai Cantik... ✨</h3>
+            <p>Ada pesan rahasia buat kamu.</p>
+            <p class="tap-hint">Klik untuk membuka 💌</p>
+          </div>
+        </div>
+        <div class="heart-seal">❤️</div>
       </div>
     </div>
 
-    <!-- Gallery page -->
-    <div id="galleryPage">
-      <audio id="audio" autoplay muted loop>
-        <source src="lagu.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
-      <h2><b>the prettiest girl i’ve ever met 💗💞</b></h2>
+    <!-- STAGE 2: Message Card (Typewriter Popup) -->
+    <div id="popupCard" class="card">
+      <div class="card-header">
+        <div class="sparkles">✨💖✨</div>
+      </div>
+      <div class="card-body">
+        <p id="popupText" class="typewriter-text"></p>
+      </div>
+      <div class="card-footer">
+        <button id="nextBtn" onclick="nextPopup()">Ketuk untuk membaca... 💌</button>
+      </div>
+    </div>
 
-      <div class="gallery-container">
-        <div class="gallery">
-          <!-- Foto asli -->
-          <img src="foto/1.jpg" alt="Foto kamu">
-          <img src="foto/2.jpg" alt="Foto kamu">
-          <img src="foto/3.jpg" alt="Foto kamu">
-          <img src="foto/4.jpg" alt="Foto kamu">
-          <img src="foto/5.jpg" alt="Foto kamu">
-          <img src="foto/6.jpg" alt="Foto kamu">
-          <img src="foto/7.jpg" alt="Foto kamu">
-          <img src="foto/8.jpg" alt="Foto kamu">
-          <img src="foto/9.jpg" alt="Foto kamu">
-          <img src="foto/10.jpg" alt="Foto kamu">
-          <img src="foto/11.jpg" alt="Foto kamu">
-          <img src="foto/12.jpg" alt="Foto kamu">
-          <img src="foto/13.jpg" alt="Foto kamu">
-          <img src="foto/14.jpg" alt="Foto kamu">
-          <img src="foto/15.jpg" alt="Foto kamu">
+    <!-- STAGE 3: Question Card -->
+    <div id="questionPage" class="card">
+      <div class="card-header">
+        <div class="floating-hearts">👀💝</div>
+      </div>
+      <div class="card-body">
+        <h2>mau lihat kumpulan foto gadis yang aku sukai?</h2>
+      </div>
+      <div class="card-footer button-group">
+        <button id="yesBtn" onclick="goToGallery()">Mau banget! 💖</button>
+        <button id="noBtn" onclick="moveNoBtn()">Tidaa 🥺</button>
+      </div>
+    </div>
 
-          <!-- Duplikasi untuk looping mulus -->
-          <img src="foto/1.jpg" alt="Foto kamu">
-          <img src="foto/2.jpg" alt="Foto kamu">
-          <img src="foto/3.jpg" alt="Foto kamu">
-          <img src="foto/4.jpg" alt="Foto kamu">
-          <img src="foto/5.jpg" alt="Foto kamu">
+    <!-- STAGE 4: Polaroid Swipe Gallery -->
+    <div id="galleryPage" class="card">
+      <div class="card-header">
+        <h2>gadis tercantik yang pernah kutemui 💗💞</h2>
+      </div>
+      <div class="card-body stack-wrapper">
+        <!-- Tinder-style swipeable card deck -->
+        <div class="polaroid-stack" id="polaroidStack">
+          <!-- Dynamically generated Polaroid cards via JS -->
         </div>
       </div>
+      <div class="card-footer gallery-controls">
+        <button class="nav-btn prev-btn" onclick="swipeLeft()" title="Geser Kiri">💔 Geser Kiri</button>
+        <button class="nav-btn next-btn" onclick="swipeRight()" title="Geser Kanan">💖 Geser Kanan</button>
+      </div>
     </div>
+
   </div>
 
   <script src="script.js"></script>
-  <script>
-    document.addEventListener("click", function () {
-      var audio = document.getElementById('audio');
-      audio.muted = false;
-      audio.play();
-    });
-  </script>
 </body>
+
 </html>
